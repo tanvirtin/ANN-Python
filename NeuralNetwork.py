@@ -85,7 +85,7 @@ class NeuralNetwork(object):
 			for j in range(len(self.layers[i])): # loops through neurons in a layer
 
 				for k in range(len(self.layers[i - 1])): # loops through neurons in the previous layer
-					# NOTE** - index of neurons at the previous layer k is equal to the index of the weights in the current neuron
+					# NOTE** - index of neurons at the previous layer k is equal to the index of the weights in the current neuron and each weight is connected to only a single neuron!
 					self.layers[i][j].output += self.layers[i - 1][k].output * self.layers[i][j].weights[k]
 
 				# the last for loop did not add the bias term as for example in the previous layer
@@ -166,7 +166,7 @@ class NeuralNetwork(object):
 				self.layers[i][j].weights[len(self.layers[i][j].weights) - 1] += self.alpha * self.layers[i][j].delta_e * 1 # 1 because thats what the bias weight gets multiplied by
 
 	'''
-		Purpose: A simple method thats provides abstraction for training the nn
+		Purpose: A simple method thats provides abstraction for training the Neural Network by using private methods
 	'''
 	def train(self, input_list, output_list):
 		self.__feed_forward(input_list)
@@ -177,15 +177,20 @@ class NeuralNetwork(object):
 	'''
 	def query(self, input_list):
 		self.__feed_forward(input_list)
-		string = "------\n"
+		out = []
+		for j in range(len(self.layers[len(self.layers) - 1])):
+			out.append(self.layers[len(self.layers) - 1][j].output)
+		return out
 
+	'''
+		Purpose: Returns the outputs of the Neural Network in a string
+	'''
+	def output_to_string():
+		string = "------\n"
 		# loops over the last layer of the Neural Network which is the output layer
 		for j in range(len(self.layers[len(self.layers) - 1])):
 			string += "Output --> " + str(self.layers[len(self.layers) - 1][j].output) + "\n"
-
 		string += "------\n"
-
-		return string
 
 	'''
 		Purpose: one of many activation function sigmoid, what sigmoid does is, it takes in a 
