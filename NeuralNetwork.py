@@ -12,7 +12,7 @@ seed(1) # seeding the random time to get similar random weights every time
 class NeuralNetwork(object):
 
 	def __init__(self, dimension, learning_rate):
-		self.layers = self.generate_layers(dimension)
+		self.layers = self.__generate_layers(dimension)
 		self.alpha = learning_rate
 
 	'''
@@ -45,7 +45,7 @@ class NeuralNetwork(object):
 				 an additional weight for each neuron in the current layer known as the bias 
 				 neuron, that's why we do len(self.layers[i - 1]) + 1) at line 47
 	'''
-	def generate_layers(self, dimension):
+	def __generate_layers(self, dimension):
 		if isinstance(dimension, list):
 			self.layers = []
 			for i in range(len(dimension)):
@@ -69,7 +69,7 @@ class NeuralNetwork(object):
 				 The input values follow sigma->weight-i->j * input-i rule and then the neuron is
 				 activated using an activation function
 	'''
-	def feed_forward(self, input_list):
+	def __feed_forward(self, input_list):
 		if not isinstance(input_list, list) or len(input_list) != len(self.layers[0]): # either of the statement needs to be true for the entire expression to evaluate to true
 			raise Exception("Invalid input list")
 
@@ -101,7 +101,7 @@ class NeuralNetwork(object):
 		Purpose: Method of the class entirely responsible for the learning process of a
 				 Neural Network
 	'''
-	def back_propagate(self, target_list):
+	def __back_propagate(self, target_list):
 		if not isinstance(target_list, list) or len(target_list) != len(self.layers[len(self.layers) - 1]):
 			raise Exception("Invalid target list")
 
@@ -146,6 +146,10 @@ class NeuralNetwork(object):
 
 				 weightj += alpha * delta_e * outputi
 				 => weightj += alpha * dEj/dWi->j
+
+				 We descend down the gradient at a rate and not all at once hence the name gradient
+				 descent, we descend down the gradient using the stochastic gradient descent meaning
+				 each change in weight value updates the weight immedietly in each epoch.
 					
 	'''
 	def __stochastic_gradient_descent(self):
@@ -162,6 +166,27 @@ class NeuralNetwork(object):
 				# bias weight always gets multiplied by 1, so therefore we multiply it using 1 seperately
 				self.layers[i][j].weights[len(self.layers[i][j].weights) - 1] += self.alpha * self.layers[i][j].delta_e * 1 # 1 because thats what the bias weight gets multiplied by
 
+	'''
+		Purpose: A simple method thats provides abstraction for training the nn
+	'''
+	def train(self, input_list, output_list):
+		self.__feed_forward(input_list)
+		self.__back_propagate(output_list)
+
+	'''
+		Purpose: Provides abstraction in querying the Neural Network by combining private methods
+	'''
+	def query(self, input_list):
+		self.__feed_forward(input_list)
+		string = "------\n"
+
+		# loops over the last layer of the Neural Network which is the output layer
+		for j in range(len(self.layers[len(self.layers) - 1])):
+			string += "Output --> " + str(self.layers[len(self.layers) - 1][j].output) + "\n"
+
+		string += "------\n"
+
+		return string
 
 	'''
 		Purpose: one of many activation function sigmoid, what sigmoid does is, it takes in a 
