@@ -5,9 +5,10 @@ from Neuron import Neuron
 seed(1)
 
 def main():
-	nn = NeuralNetwork([1, 2, 1])
+	nn = NeuralNetwork([1, 2, 1], 0.5)
 
 	nn.feed_forward([2.7810836])
+	nn.back_propagate([1])
 
 	print(nn)
 
