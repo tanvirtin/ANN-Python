@@ -111,12 +111,11 @@ class NeuralNetwork(object):
 			self.layers[len(self.layers) - 1][j].delta_e = (target_list[j] - self.layers[len(self.layers) - 1][j].output) * self.__sigmoid_prime(self.layers[len(self.layers) - 1][j].output)
 
 
-		# now we loop all the hidden layers not including the input layer and calculate
+		# now we loop all the hidden layers starting backwards not including the input layer and calculate
 		# the delta_e error values for the neurons in the hidden layer
 		# delta_e(j) = sigma->error-k * weight-k->j
 
-		for i in range(1, len(self.layers) - 1): # loops through each layer in a Neural Network
-
+		for i in range(len(self.layers) - 2, 0, -1): # loops through each hidden layer in a Neural Network starting from the back
 			for j in range(len(self.layers[i])): # loops through neurons in a layer
 
 				# jth index for the neuronin the current layer has a weight which links itself

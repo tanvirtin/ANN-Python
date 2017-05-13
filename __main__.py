@@ -6,7 +6,7 @@ from Neuron import Neuron
 seed(1)
 
 def main():
-	nn = NeuralNetwork([1, 4, 1], 0.5)
+	nn = NeuralNetwork([1, 4, 4, 1], 0.5)
 
 	epochs = 80000
 
