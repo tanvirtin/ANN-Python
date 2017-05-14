@@ -52,6 +52,7 @@ class NeuralNetwork(object):
 				list_of_neurons = [] # list of neurons in each layer
 				for j in range(dimension[i]): # dimension array contains how many neurons should be in each layer
 					if i - 1 > -1: # to stop going below 0th index, first layer should not have neurons with any weights
+						# NOTE** - we are adding + 1 to the length of the neurons in the previous layer because we want an additional weight value which will be the bias
 						list_of_neurons.append(Neuron(len(self.layers[i - 1]) + 1, random)) # each neuron will contain a n number of weights in a list where n is the length of the neurons in the previous layer
 					
 					else: # first layer, also known as input layer with no weights
@@ -92,7 +93,8 @@ class NeuralNetwork(object):
 				# we have 2 neurons and our weight is 3, we loop according to the previous layer, the
 				# last bias term never gets accessed with k as k loops using the length of the previous layer neurons
 
-				self.layers[i][j].output += self.layers[i][j].weights[len(self.layers[i][j].weights) - 1]
+				# bias weights always gets multiplied by 1
+				self.layers[i][j].output += self.layers[i][j].weights[len(self.layers[i][j].weights) - 1] * 1
 
 				# individual neuron is being activated upon exceeding the threshold value
 				self.layers[i][j].output = self.__sigmoid(self.layers[i][j].output)
@@ -106,7 +108,7 @@ class NeuralNetwork(object):
 			raise Exception("Invalid target list")
 
 		# loops over each neuron in the output layer and applies the following formula
-		# delta_e(theta) = (t - 0) * sigmoidPrime(output)
+		# delta_e(theta) = (t - 0) * sigmoidPrime(output(theta))
 		for j in range(len(self.layers[len(self.layers) - 1])):
 			self.layers[len(self.layers) - 1][j].delta_e = (target_list[j] - self.layers[len(self.layers) - 1][j].output) * self.__sigmoid_prime(self.layers[len(self.layers) - 1][j].output)
 
@@ -125,6 +127,7 @@ class NeuralNetwork(object):
 				for k in range(len(self.layers[i + 1])): # loops through neurons in the next layer
 					self.layers[i][j].delta_e += self.layers[i + 1][k].weights[j] * self.layers[i + 1][k].delta_e
 
+				# delta_e(j) = (delta_e(k)) * sigmoidPrime(output(j))
 				self.layers[i][j].delta_e = self.layers[i][j].delta_e * self.__sigmoid_prime(self.layers[i][j].output)
 
 		self.__stochastic_gradient_descent()
@@ -162,7 +165,7 @@ class NeuralNetwork(object):
 					# the weight that I contain times the input with with I multiply myself to get the error in the first place
 					self.layers[i][j].weights[k] += self.alpha * self.layers[i][j].delta_e * self.layers[i - 1][k].output # again self.layers[i - 1][k].output, k because each weight is destined to have only one input 
 
-				# bias weight always gets multiplied by 1, so therefore we multiply it using 1 seperately
+				# bias weight always gets multiplied by 1, because the input in the previous layer is still 1, so therefore we multiply it using 1 seperately
 				self.layers[i][j].weights[len(self.layers[i][j].weights) - 1] += self.alpha * self.layers[i][j].delta_e * 1 # 1 because thats what the bias weight gets multiplied by
 
 	'''
