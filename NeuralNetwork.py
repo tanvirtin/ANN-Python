@@ -96,10 +96,8 @@ class NeuralNetwork(object):
 				# bias weights always gets multiplied by 1
 				self.layers[i][j].output += self.layers[i][j].weights[len(self.layers[i][j].weights) - 1] * 1
 
-				# we don't sigmoid the last layer
-				if i != len(self.layers) - 1:
-					# individual neuron is being activated upon exceeding the threshold value
-					self.layers[i][j].output = self.__sigmoid(self.layers[i][j].output)
+				# individual neuron is being activated upon exceeding the threshold value
+				self.layers[i][j].output = self.__sigmoid(self.layers[i][j].output)
 
 	'''
 		Purpose: Method of the class entirely responsible for the learning process of a
