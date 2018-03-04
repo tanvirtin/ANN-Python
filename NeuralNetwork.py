@@ -27,7 +27,7 @@ class NeuralNetwork(object):
 			for j in range(len(self.layers[i])):
 				string += "----------------\n"
 				string += "|||| Neuron ||||\n"
-				string += "----------------\n"
+			 	string += "----------------\n"
 				string += str(self.layers[i][j])
 				string += "\n"
 			string += "\n"
